@@ -1,9 +1,3 @@
-._glm
-._IG-Algo-TP1.cbp
-._IG-Algo-TP1.layout
-._Makefile
-._object.cpp
-._object.hpp
-._window.hpp
+._*
 .idea
 *.o
