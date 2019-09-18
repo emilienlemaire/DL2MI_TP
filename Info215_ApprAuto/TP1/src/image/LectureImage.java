@@ -184,6 +184,7 @@ public class LectureImage {
                 image8) {
             System.out.print(ligne + " ");
         }
+        
         /*for (int j = 0; j < toutesImages[label].length; j++) {
             System.out.print(toutesImages[label][j] + " ");
         }*/
