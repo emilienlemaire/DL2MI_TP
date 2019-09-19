@@ -2,8 +2,8 @@ DEBUG=yes
 UNAME=$(shell uname)
 CC=g++
 GCC=gcc
-CFLAGS=-Wno
-LDFLAGS=-Wno
+CFLAGS=-Wno-parentheses -Wno-deprecated
+LDFLAGS=-Wno-parentheses -Wno-deprecated
 ifeq ($(UNAME),Darwin)
 	LIBS=-lm -lpthread -framework OpenGL -framework GLUT
 else
