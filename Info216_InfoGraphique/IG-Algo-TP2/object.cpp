@@ -12,7 +12,7 @@ void Object::update_transformation(mat4 m)
     vertices_transformed = vertices;
 
     for (int i = 0; i < vertices_transformed.size(); ++i) {
-        vertices_transformed[i] = (vertices.at(i) * m);
+        vertices_transformed[i] = (m * vertices.at(i));
         //if(i%100 == 0 ) std::cout << vertices_transformed[i][0] << " " << vertices_transformed[i][1] << " " <<vertices_transformed[i][2] << " " << vertices_transformed[i][3] << std::endl;
     }
 
@@ -29,7 +29,7 @@ void Object::update_projection(mat4 m)
     }
 
     for (int i = 0; i < vertices_projected.size(); ++i) {
-        vec4 vec = vertices_transformed[i] * m;
+        vec4 vec = m * vertices_transformed.at(i);
         vertices_projected.at(i) = (vec2(vec.x, vec.y));
     }
 }
@@ -42,10 +42,10 @@ void Object::draw(Window & window, vec4 light)
 		{
 			case DRAW_WIRE :
 			    {
-                    window.draw_line(vertices_projected[faces[i].vertex_index[0]], vertices_projected[faces[i].vertex_index[1]], vec3(1.0, 0, 0));
-                    window.draw_line(vertices_projected[faces[i].vertex_index[1]], vertices_projected[faces[i].vertex_index[2]], vec3(1.0, 0, 0));
-                    window.draw_line(vertices_projected[faces[i].vertex_index[2]], vertices_projected[faces[i].vertex_index[3]], vec3(1.0, 0, 0));
-                    window.draw_line(vertices_projected[faces[i].vertex_index[3]], vertices_projected[faces[i].vertex_index[0]], vec3(1.0, 0, 0));
+                    window.draw_line(vertices_projected[faces[i].vertex_index[0]], vertices_projected[faces[i].vertex_index[1]], faces[i].color);
+                    window.draw_line(vertices_projected[faces[i].vertex_index[1]], vertices_projected[faces[i].vertex_index[2]], faces[i].color);
+                    window.draw_line(vertices_projected[faces[i].vertex_index[2]], vertices_projected[faces[i].vertex_index[3]], faces[i].color);
+                    window.draw_line(vertices_projected[faces[i].vertex_index[3]], vertices_projected[faces[i].vertex_index[0]], faces[i].color);
 				}
 				break;
 			case DRAW_FILL :

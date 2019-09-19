@@ -172,17 +172,19 @@ mat4 transformation_matrix(double pitch, double yaw, double roll, vec3 translati
 	           vec4(0.0, 0, 0, 1.0),
 	           vec4(translation, 1.0));
 
-	mat4 transformation = Rz * Ry * Rx * trans;
+	mat4 R = Rx * Ry * Rz;
+
+	mat4 transformation = trans * R;
 
 	return transformation;
 }
 
 mat4 projection_matrix(double focal)
 {
-	mat4 projection(vec4(focal, vec3(1)),
-	                vec4(0, focal, 1, 1),
-	                vec4(window.get_width()/2, window.get_height()/2, 1, 1),
-	                vec4(0, 0, 1, 1));
+	mat4 projection(vec4(1, 0, 0, 0),
+	                vec4(0, 1, 0, 0),
+	                vec4(0, 0, 1, 0),
+	                vec4(0, 0, 0, 1));
 
 	return projection;
 }
