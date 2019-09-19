@@ -152,27 +152,27 @@ mat4 transformation_matrix(double pitch, double yaw, double roll, vec3 translati
 
 
 
-	mat4 Rx(vec4(1.0, 0.0,           0.0,          0.0),
+	mat4 Rx(vec4(1.0, 0.0,         0.0,        0.0),
 	        vec4(0.0, cos(pitch),  sin(pitch), 0.0),
 	        vec4(0.0, -sin(pitch), cos(pitch), 0.0),
-	        vec4(0.0, 0.0,           0.0,          1.0));
+	        vec4(0.0, 0.0,                0.0, 1.0));
 
 	mat4 Ry(vec4(cos(yaw), 0.0, -sin(yaw), 0.0),
-	        vec4(0.0,        1.0,         0.0, 0.0),
+	        vec4(0.0,      1.0,       0.0, 0.0),
 	        vec4(sin(yaw), 0.0,  cos(yaw), 0.0),
-	        vec4(0.0,        0.0,         0.0, 1.0));
+	        vec4(0.0,      0.0,       0.0, 1.0));
 
 	mat4 Rz(vec4(cos(roll),  sin(roll), 0.0, 0.0),
 	        vec4(-sin(roll), cos(roll), 0.0, 0.0),
-	        vec4(0.0,                  0.0, 1.0, 0.0),
-	        vec4(0.0,                  0.0, 0.0, 1.0));
+	        vec4(0.0,              0.0, 1.0, 0.0),
+	        vec4(0.0,              0.0, 0.0, 1.0));
 
 	mat4 trans(vec4(1.0, vec3(0.0)),
-	        vec4(0.0, 1.0, 0, 0),
-	        vec4(0.0, 0, 0, 1.0),
-	        vec4(translation, 1.0));
+	           vec4(0.0, 1.0, 0, 0),
+	           vec4(0.0, 0, 0, 1.0),
+	           vec4(translation, 1.0));
 
-	mat4 transformation = trans * Rz * Ry * Rx;
+	mat4 transformation = Rz * Ry * Rx * trans;
 
 	return transformation;
 }

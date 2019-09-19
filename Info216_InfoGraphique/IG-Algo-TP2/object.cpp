@@ -12,7 +12,7 @@ void Object::update_transformation(mat4 m)
     vertices_transformed = vertices;
 
     for (int i = 0; i < vertices_transformed.size(); ++i) {
-        vertices_transformed[i] = (m * vertices.at(i));
+        vertices_transformed[i] = (vertices.at(i) * m);
         //if(i%100 == 0 ) std::cout << vertices_transformed[i][0] << " " << vertices_transformed[i][1] << " " <<vertices_transformed[i][2] << " " << vertices_transformed[i][3] << std::endl;
     }
 
@@ -24,9 +24,13 @@ void Object::update_transformation(mat4 m)
 
 void Object::update_projection(mat4 m)
 {
-    for (int i = 0; i < vertices_transformed.size(); ++i) {
-        vec4 vec = m * vertices_transformed[i];
-        vertices_projected.push_back(vec2(vec.x, vec.y));
+    while(vertices_projected.size() < vertices_transformed.size()){
+        vertices_projected.push_back(vec2(0));
+    }
+
+    for (int i = 0; i < vertices_projected.size(); ++i) {
+        vec4 vec = vertices_transformed[i] * m;
+        vertices_projected.at(i) = (vec2(vec.x, vec.y));
     }
 }
 
