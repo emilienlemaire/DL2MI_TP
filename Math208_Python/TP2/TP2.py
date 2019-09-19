@@ -71,6 +71,13 @@ print(A)
 print(B)
 print(C)
 
+
+print("\nQuestion 3\n")
+
+A = np.array([[1 if (x == 0 or x == 9) else (1 if (y == 0 or y == 9) else (1 if x == y else 0)) for x in range(10)] for y in range(10)])
+
+print(A)
+
 print("\nQuestion 4\n")
 
 L = np.array([[2 if i == j else (-1 if (i == j - 1 or i == j + 1) else 0) for j in range(10)] for i in range(10)])

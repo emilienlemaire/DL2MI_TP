@@ -181,10 +181,10 @@ mat4 projection_matrix(double focal)
 {
 	mat4 projection(vec4(focal, vec3(1)),
 	                vec4(0, focal, 1, 1),
-	                vec4(800, 800, 1, 1),
+	                vec4(window.get_width()/2, window.get_height()/2, 1, 1),
 	                vec4(0, 0, 1, 1));
 
-	return mat4();
+	return projection;
 }
 
 void load_box(Object & o)
