@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -204,6 +205,119 @@ public class ImageDenoisingSkel {
 		return (100 * scoreFinal) / imageOriginale.length;
 	}
 
+	private static int[] histogram(BufferedImage img) {
+
+		WritableRaster raster = img.getRaster();
+		int[] data = new int[img.getWidth() * img.getHeight()];
+		data = raster.getSamples(0, 0, img.getWidth(), img.getHeight(), 0, data);
+
+		int max = 0;
+
+		for (int color:
+			 data) {
+			if (color > max){
+				max = color;
+			}
+		}
+
+		int[] hist = new int[max + 1];
+
+		for (int datum : data) {
+			hist[datum]++;
+		}
+
+		return hist;
+	}
+
+	private static int nbT(int T, int[] histogram){
+
+		int nb = 0;
+
+		for (int i = 0; i < T; i++) {
+			nb += histogram[i];
+		}
+
+		return nb;
+
+	}
+
+	private static int noT(int T, int[] histogram){
+
+		int no = 0;
+
+		for (int i = 0; i < 256 - T; i++) {
+			no += histogram[T + i];
+		}
+
+		return no;
+
+	}
+
+	private static int[][] variances(int T, int[] histogram){
+
+		int[][] resultat = new int[2][2];
+
+		int mu1 = 0;
+		int mu2 = 0;
+
+		for (int i = 0; i < T; i++) {
+			mu1 += histogram[i];
+		}
+
+		for (int i = 0; i < (256 - T); i++) {
+			mu2 += histogram[i + T];
+		}
+
+		int sigma1 = 0;
+		int sigma2 = 0;
+
+
+		for (int i = 0; i < T; i++) {
+			sigma1 += (mu1 - histogram[i]) * (mu1 - histogram[i]);
+		}
+
+		for (int i = 0; i < (256 - T); i++) {
+			sigma2 += (mu2 -  histogram[i + T]) * (mu2 -  histogram[i + T]);
+		}
+
+		resultat[0][0] = sigma1;
+		resultat[0][1] = sigma2;
+
+		resultat[1][0] = mu1;
+		resultat[1][1] = mu2;
+
+		return resultat;
+
+	}
+
+	private static int oWithin(int T, int[] histogram){
+		return (nbT(T, histogram) *  variances(T, histogram)[0][0] + noT(T, histogram) * variances(T, histogram)[0][1]);
+	}
+
+	private static int oBetween(int T, int[] histogram){
+		return (nbT(T, histogram) *  noT(T, histogram) * (variances(T, histogram)[1][0] - variances(T, histogram)[1][1]));
+	}
+
+	private static int otsuT(BufferedImage img){
+
+		int T = 0;
+
+		int[] histogram = histogram(img);
+
+		int oBetween = 0;
+
+		for (int i = 0; i < 256; i++) {
+
+			if (oBetween < oBetween(i, histogram)) {
+				oBetween = oBetween(i, histogram);
+				T = i;
+			}
+
+		}
+
+		return T;
+	}
+
 	public static void main(String[] s) throws IOException {
 
 		float setNoise = .1f;
@@ -211,8 +325,12 @@ public class ImageDenoisingSkel {
 		// Génération de l'image en niveau de gris
 		BufferedImage img = readImage("image.png");
 
+		int T = otsuT(img);
+
+		System.out.println("La valeur de T est: " + T);
+
 		img = toGray(img);
-		img = binarize(img, 80);
+		img = binarize(img, T);
 
 		ImageIO.write(img, "png", new File("binary.png"));
 
