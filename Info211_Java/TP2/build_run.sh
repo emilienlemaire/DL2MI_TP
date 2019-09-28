@@ -1,1 +1,0 @@
-javac BuildLexicon.java && java BuildLexicon
