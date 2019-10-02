@@ -80,6 +80,6 @@ void Object::draw(Window & window, vec4 light)
 void Object::backface_culling(mat4 trans_matrix)
 {
     for (int i = 0; i < faces.size(); ++i) {
-        
+        faces[i].visible = faces[i].normal * vec4()
     }
 }
