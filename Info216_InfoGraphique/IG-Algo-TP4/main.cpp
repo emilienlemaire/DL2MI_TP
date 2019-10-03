@@ -74,9 +74,20 @@ void display()
 	//myobject.draw_method = DRAW_LAMBERT;
 	//myobject.draw_method = DRAW_GOURAUD;
 
-	vec3 color[2] = {vec3(1, 0, 0), vec3(0,0,1)};
+	vec3 colors[4] = {vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 0.0), vec3(1.0, 0.0, 0.0)};
+	vec2 points[4] = {
+	        vec2(150, 150),
+	        vec2(150, 175),
+	        vec2(175, 175),
+	        vec2(175, 150)
+	};
 
-	window.draw_horizontal_line(window.get_height() * window.get_sample() / 2, 0, window.get_width() * window.get_sample()/2, color);
+    for (int i = window.get_height() / 2; i < (window.get_height() * 3 / 4); ++i) {
+        vec3 colors_line[2] = {colors[0], colors[1]};
+        window.draw_horizontal_line(i, window.get_height() / 2, window.get_height() * 3 / 4, colors_line);
+    }
+
+	//window.draw_quad(points, colors);
 
 	vec3 trans(0.0f, 0.0f, -800.0f);
 	mat4 trans_matrix = transformation_matrix(angle, angle, angle, trans);

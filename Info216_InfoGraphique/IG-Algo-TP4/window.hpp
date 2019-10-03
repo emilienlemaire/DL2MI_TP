@@ -44,6 +44,7 @@ class Window
 		void raster_buffer_insert(int, int[2], vec3, vec3[2]);
 		void draw_horizontal_line(int, int, int, vec3[2]);
 		void draw_quad(vec2[4], vec3[4]);
+		vec3 interpolation(int, int, int, vec3[2]);
 
 		void antialiasing();//anti-aliasing by oversampling
 
