@@ -1,3 +1,4 @@
+/*
 # include <limits>
 # include <math.h>
 # include "window.hpp"
@@ -9,7 +10,7 @@ Window::Window()
     pixels_final = NULL;
     width = 300;
     height = 300;
-    sample = 2;
+    sample = 1;
     width *= sample;
     height *= sample;
     nb_pixels = width*height;
@@ -241,12 +242,12 @@ void Window::raster_buffer_insert(int x, int raster_buffer[2], vec3 color, vec3 
 {
     if(x < raster_buffer[0]) {
         raster_buffer[0] = x;
-        color_buffer[0] = vec3(color);
+        color_buffer[0] = color;
     }
 
     if (x > raster_buffer[1]){
         raster_buffer[1] = x;
-        color_buffer[1] = vec3(color);
+        color_buffer[1] = color;
     }
 }
 
@@ -258,14 +259,13 @@ void Window::draw_horizontal_line(int y, int x1, int x2, vec3 c)
 
 void Window::draw_horizontal_line(int y, int x1, int x2, vec3 c[2])
 {
-    vec3 pas = (c[1] - c[0])/(float)(x2 - x1);
-    for (int i = 0; i <= (x2 - x1); ++i) {
+    for (int i = 0; i <= x2; ++i) {
         if(i == 0){
             draw_pixel(vec2(x1, y), c[0]);
         } else if (i == x2) {
             draw_pixel(vec2(x2, y), c[1]);
         } else {
-            vec3 color = c[0] + ((float)i * pas);
+            vec3 color = ((c[1] - c[0]) * (float)(x1 + i) / (float)x2) + c[0];
             draw_pixel(vec2(x1 + i, y), color);
         }
     }
@@ -354,6 +354,35 @@ void Window::draw_quad(vec2 p[4], vec3 c)
 	}
 }
 
+vec3 Window::interpolation(int x1, int x2, int x, vec3 c[2]){
+    float x1_f = (float)x1;
+    float x2_f = (float)x2;
+    float x_f = (float)x;
+    vec3 color;
+
+    if(x1 != x2){
+        color = (c[0] * ((x_f-x2_f)/(x1_f-x2_f)) + c[1] * ((x1_f - x_f)/(x1_f-x2_f)));*/
+/*
+        if (color.x > 1.0)
+            color.x = 1.0;
+        if (color.y > 1.0)
+            color.y = 1.0;
+        if (color.z > 1.0)
+            color.z = 1.0;
+        if (color.x < 0.0)
+            color.x = 0.0;
+        if (color.y < 0.0)
+            color.y = 0.0;
+        if (color.z < 0.0)
+            color.z = 0.0;*//*
+
+    } else {
+        return c[0];
+    }
+
+    return color;
+}
+
 void Window::draw_quad(vec2 p[4], vec3 c[4])
 {
 	int raster_buffer[height][2];
@@ -374,7 +403,6 @@ void Window::draw_quad(vec2 p[4], vec3 c[4])
 		int y2 = (int)p2.y;
 		int dx = (int)abs(x2 - x1);
 		int dy = (int)abs(y2 - y1);
-		vec3 pas = (c[(i + 1)%4] - c[i]) / (float)dy;
 		int xinc = (p2.x>p1.x)?1:-1;
 		int yinc = (p2.y>p1.y)?1:-1;
 		if(dx == 0 && dy == 0)
@@ -393,12 +421,12 @@ void Window::draw_quad(vec2 p[4], vec3 c[4])
 			{
 				yinc = -yinc;
 			}
-			for(int j=0; j<=dx; j++)
+			for(int i=0; i<=dx; i++)
 			{
 				if(y>=0 && y<height)
 				{
-				    vec3 color = c[i] + ((float)j * pas);
-					raster_buffer_insert(x, raster_buffer[y], c[i] + color, color_buffer[y]);
+				    abs(c[(i+1)%4] - c[i]) * (float)(x1 + i) / (float)x2 + c[(i+1)%4];
+					raster_buffer_insert(x, raster_buffer[y], c[i], color_buffer[y]);
 				}
 				e += 2*dy;
 				x++;
@@ -418,12 +446,12 @@ void Window::draw_quad(vec2 p[4], vec3 c[4])
 			{
 				xinc = -xinc;
 			}
-			for(int j=0; j<=dy; j++)
+			for(int i=0; i<=dy; i++)
 			{
 				if(y>=0 && y<height)
 				{
-				    vec3 color = c[i] + ((float)j * pas);
-					raster_buffer_insert(x, raster_buffer[y], c[i] + color, color_buffer[y]);
+				    abs(c[(i+1)%4] - c[i]) * (float)(x1 + i) / (float)x2 + c[(i+1)%4];
+					raster_buffer_insert(x, raster_buffer[y], c[i], color_buffer[y]);
 				}
 				e += 2*dx;
 				y++;
@@ -450,3 +478,4 @@ float Window::c2f(unsigned char c)
 {
     return ((float)c / 255.0f);
 }
+*/

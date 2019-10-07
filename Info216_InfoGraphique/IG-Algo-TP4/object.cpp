@@ -68,7 +68,7 @@ void Object::draw(Window & window, vec4 light)
 			case DRAW_LAMBERT :
 			    if(faces[i].visible){
                     float scalar = dot(faces[i].normal_transformed, light);
-			        vec3 color(faces[i].color.x * scalar, faces[i].color.y * scalar, faces[i].color.z * scalar);
+			        vec3 color(faces[i].color * scalar);
 					vec2 p[4];
 					for(unsigned int v=0; v<4; v++)
 					{
@@ -78,7 +78,30 @@ void Object::draw(Window & window, vec4 light)
 			    }
 				break;
 			case DRAW_GOURAUD :
-				// TODO => TP04 //
+			    if(faces[i].visible){
+			        vec3 c[4];
+					vec2 p[4];
+                    vec3 colors[4];
+					for(unsigned int v=0; v<4; v++)
+					{
+                        int facesInd[4];
+                        vec4 normalP;
+
+                        vec4 somme = vec4(0);
+
+                        for (int n = 0; n < 4; ++n) {
+                            somme += faces[(i+n) % faces.size()].normal_transformed;
+                        }
+
+                        vec4 sommeAbs = abs(somme);
+
+                        normalP = somme / sommeAbs;
+                        float scalar = dot(normalP, light);
+                        colors[v] = faces[i].color * scalar;
+						p[v] = vertices_projected[faces[i].vertex_index[v]];
+					}
+					window.draw_quad(p, colors);
+			    }
 				break;
 			default :
 				break;
